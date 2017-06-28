@@ -10,9 +10,12 @@ import (
 	"os"
 	"os/exec"
 	"encoding/json"
-	"github.com/satori/go.uuid"
 	"strings"
 	"path/filepath"
+	"time"
+	"bytes"
+	"github.com/satori/go.uuid"
+	"github.com/gorilla/mux"
 )
 
 // 100 MB
@@ -58,6 +61,33 @@ type Thumbs struct {
 	SyncRate int	`json:"sync_rate"`
 }
 
+func download(w http.ResponseWriter, r *http.Request) {
+	// http://www.giantflyingsaucer.com/blog/?p=5635
+	vars := mux.Vars(r)
+
+	files := vars["files"]
+	guid := vars["uuid"]
+	name := vars["name"]
+	if (files != "" && name != "" && guid != "") {
+		heif_file_name := "./" + files + "/" + guid + "/" + name
+		log.Println(heif_file_name)
+		// https://stackoverflow.com/a/29024834/319826
+		heif_file, err := ioutil.ReadFile(heif_file_name)
+		if err != nil {
+			log.Println("Unable to read HEIF-file")
+			w.WriteHeader(http.StatusNotFound)
+			fmt.Fprint(w,"No file found!")
+		} else {
+			w.Header().Set("Content-Type", "application/octet-stream")
+			w.Header().Set("Content-Disposition", "attachment; filename=" +heif_file_name)
+			w.Header().Set("Content-Transfer-Encoding", "binary")
+			w.Header().Set("Expires", "0")
+			w.Header().Set("Status", "OK")
+			http.ServeContent(w, r, heif_file_name, time.Now(), bytes.NewReader(heif_file))
+		}
+	}
+}
+
 func upload(w http.ResponseWriter, r *http.Request) {
 	guid := uuid.NewV4()
 	var UPLOAD_FOLDER string = "files/" + guid.String()
@@ -94,9 +124,9 @@ func upload(w http.ResponseWriter, r *http.Request) {
 			path := fmt.Sprintf(UPLOAD_FOLDER + "/%s", filename)
 			buf, _ := ioutil.ReadAll(file)
 			ioutil.WriteFile(path, buf, 0644)
-			new_file_name := UPLOAD_FOLDER + "/" + strings.TrimSuffix(filename, filepath.Ext(filename)) + "." + extension
+			heif_file_name := UPLOAD_FOLDER + "/" + strings.TrimSuffix(filename, filepath.Ext(filename)) + "." + extension
 			log.Println("File '" + path + "' saved.")
-			log.Println("New filename: " + new_file_name)
+			log.Println("New filename: " + heif_file_name)
 
 
 			// Create json
@@ -104,7 +134,7 @@ func upload(w http.ResponseWriter, r *http.Request) {
 			heif_config := &HeifConfig {
 				General: General {
 					Output: Output {
-						FilePath: new_file_name,
+						FilePath: heif_file_name,
 					},
 					Brands: Brands {
 						Major: "mif1",
@@ -168,12 +198,18 @@ func upload(w http.ResponseWriter, r *http.Request) {
 			}
 
 			log.Println("File '" + path + "' converted to HEIF-format!")
+
+			// https://stackoverflow.com/a/35934496/319826
+			log.Println("/download/" + heif_file_name)
+			http.Redirect(w, r, "/download/" + heif_file_name, http.StatusSeeOther)
 		}
 	}
 }
 
 func main() {
-	http.HandleFunc("/upload", upload)
+	router := mux.NewRouter().StrictSlash(true)
+	router.HandleFunc("/download/{files}/{uuid}/{name}", download).Methods("GET")
+	router.HandleFunc("/upload", upload).Methods("POST")
 	http.Handle("/", http.FileServer(http.Dir("static")))
-	log.Fatal(http.ListenAndServe(":8080", nil))
+	log.Fatal(http.ListenAndServe(":8080", router))
 }
