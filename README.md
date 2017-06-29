@@ -13,11 +13,8 @@ Example converting file to heic-format using curl:
 
 curl -OLJs -F "file=@_7D_8286.JPG;type=multipart/form-data" "http://localhost:8080/upload"
 
-O tells curl to download the file, otherwise it will just display it at the command line.
-L tells curl to follow redirects.
-
-J tells curl to save the file using the remote header name.
-
-s tells curl to be silent.
-
+O tells curl to download the file, otherwise it will just display it at the command line.<br>
+L tells curl to follow redirects.<br>
+J tells curl to save the file using the remote header name.<br>
+s tells curl to be silent.<br>
 F tells curl what file you want to upload.
