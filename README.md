@@ -7,9 +7,9 @@ on https://github.com/golang-samples/http/blob/master/fileupload/main.go.
 The conversion part is taken from
 http://jpgtoheif.com/ and this is written by Ben Gotow (https://github.com/bengotow).
 
-StackOverflow is helping me out writing json at https://stackoverflow.com/a/24356483/319826.
+StackOverflow is very handy when I need help writing json at https://stackoverflow.com/a/24356483/319826.
 
-Example converting file to heic-format using curl:
+Example converting file to heic format using curl:
 
 curl -OLJs -F "file=@_7D_8286.JPG;type=multipart/form-data" "http://46.101.99.187:8080/upload"
 
@@ -18,3 +18,6 @@ L tells curl to follow redirects.<br>
 J tells curl to save the file using the remote header name.<br>
 s tells curl to be silent.<br>
 F tells curl what file you want to upload.
+
+Give it a minute or two after the file have been uploaded. When it is uploaded and converted a http redirect 303
+GET's the converted file with the same name as the original but with the heic extension.
