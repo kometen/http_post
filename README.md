@@ -11,7 +11,7 @@ StackOverflow is helping me out writing json at https://stackoverflow.com/a/2435
 
 Example converting file to heic-format using curl:
 
-curl -OLJs -F "file=@_7D_8286.JPG;type=multipart/form-data" "http://localhost:8080/upload"
+curl -OLJs -F "file=@_7D_8286.JPG;type=multipart/form-data" "http://46.101.99.187:8080/upload"
 
 O tells curl to download the file, otherwise it will just display it at the command line.<br>
 L tells curl to follow redirects.<br>
