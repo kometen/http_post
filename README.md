@@ -20,10 +20,12 @@ curl -OLJs -F "file=@Pictures/IMG_0906.JPG" "http://46.101.99.187:8080/upload"
 
 If you have more than one file the following loop works (in bash and zsh):
 
+```
 for f in *.jpg; do
   echo ${f}
   curl -OLJs -F "file=@${f}" "http://46.101.99.187:8080/upload"
 done
+```
 
 O tells curl to download the file, otherwise it will just display it at the command line.<br>
 L tells curl to follow redirects.<br>
