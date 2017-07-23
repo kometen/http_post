@@ -12,11 +12,18 @@ StackOverflow is very handy when I need help writing json at https://stackoverfl
 Example converting file to heic format using curl. Open a Terminal window and copy and paste the command
 below, change the filename after the @-sign.
 
-curl -OLJs -F "file=@_7D_8286.JPG;type=multipart/form-data" "http://46.101.99.187:8080/upload"
+curl -OLJs -F "file=@_7D_8286.JPG" "http://46.101.99.187:8080/upload"
 
 If the file is located in the Pictures-folder and is called IMG_0906.JPG the command is
 
-curl -OLJs -F "file=@Pictures/IMG_0906.JPG;type=multipart/form-data" "http://46.101.99.187:8080/upload"
+curl -OLJs -F "file=@Pictures/IMG_0906.JPG" "http://46.101.99.187:8080/upload"
+
+If you have more than one file the following loop works (in bash and zsh):
+
+for f in *.jpg; do
+  echo ${f}
+  curl -OLJs -F "file=@${f}" "http://46.101.99.187:8080/upload"
+done
 
 O tells curl to download the file, otherwise it will just display it at the command line.<br>
 L tells curl to follow redirects.<br>
