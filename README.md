@@ -41,3 +41,6 @@ Give it a minute or two after the file have been uploaded. When it is uploaded a
 GET's the converted file with the same name as the original but with the heic extension.
 
 The converter also handles png-files.
+
+If you find it usefull a tiny donation can be made to the following bitcon address 1BBezZbSQqFAoTrQgYZnt752MDCErV4AjT
+to cover the cost of running the smallest server (droplet) at Digital Ocean. And keep it small!
