@@ -42,5 +42,5 @@ GET's the converted file with the same name as the original but with the heic ex
 
 The converter also handles png-files.
 
-If you find it usefull a tiny donation can be made to the following bitcon address 1BBezZbSQqFAoTrQgYZnt752MDCErV4AjT
+If you find it usefull a tiny donation can be made to the following litecon address MBqiqTdjCcMsvdnxi7dKHiVcwWtWLKJvLo
 to cover the cost of running the smallest server (droplet) at Digital Ocean. And keep it small!
